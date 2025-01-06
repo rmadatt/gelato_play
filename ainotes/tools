@@ -1,0 +1,149 @@
+Prompt:
+Please give me the code for the following specific needs in AI Agents. Remember to use Python and relevant best practices. Context: AI Agents. Topic: Using CrewAI Tools for Customer Outreach Campaign. Agents: sales rep and lead sales rep. crewAI Tools from crewai_tools import DirectoryReadTool, \
+                         FileReadTool, \
+                         SerperDevTool                                                                                                     directory_read_tool = DirectoryReadTool(directory='./instructions')
+file_read_tool = FileReadTool()
+search_tool = SerperDevTool()                                                                                                                    
+        Create a custom tool using crewAi's BaseTool class  from crewai_tools import BaseTool                    
+          class SentimentAnalysisTool(BaseTool):
+
+DeepSeek:
+Below is the Python code for creating a **Customer Outreach Campaign** using **CrewAI** tools and agents. The code includes:
+
+1. **Defining the Agents** (`sales_rep` and `lead_sales_rep`).
+2. **Using CrewAI Tools** (`DirectoryReadTool`, `FileReadTool`, `SerperDevTool`).
+3. **Creating a Custom Tool** (`SentimentAnalysisTool`) using `BaseTool`.
+4. **Setting up Tasks** for the agents.
+5. **Running the Crew** to execute the campaign.
+
+---
+
+### Full Code:
+
+```python
+from crewai import Agent, Task, Crew
+from crewai_tools import DirectoryReadTool, FileReadTool, SerperDevTool, BaseTool
+from typing import Optional
+
+# Initialize tools
+directory_read_tool = DirectoryReadTool(directory='./instructions')
+file_read_tool = FileReadTool()
+search_tool = SerperDevTool()
+
+# Custom Tool: Sentiment Analysis Tool
+class SentimentAnalysisTool(BaseTool):
+    name: str = "Sentiment Analysis Tool"
+    description: str = "Analyzes the sentiment of a given text (positive, negative, neutral)."
+
+    def _run(self, text: str) -> str:
+        """
+        Analyze the sentiment of the input text.
+        """
+        # Example: Simple sentiment analysis logic (replace with a proper library like TextBlob or VADER)
+        positive_words = ["good", "great", "excellent", "happy", "satisfied"]
+        negative_words = ["bad", "poor", "terrible", "unhappy", "dissatisfied"]
+
+        positive_count = sum(text.lower().count(word) for word in positive_words)
+        negative_count = sum(text.lower().count(word) for word in negative_words)
+
+        if positive_count > negative_count:
+            return "Positive"
+        elif negative_count > positive_count:
+            return "Negative"
+        else:
+            return "Neutral"
+
+# Initialize custom tool
+sentiment_analysis_tool = SentimentAnalysisTool()
+
+# Define Agents
+sales_rep = Agent(
+    role="Sales Representative",
+    goal="Identify potential leads and gather relevant information for outreach.",
+    backstory="You are a sales representative responsible for finding and qualifying leads.",
+    tools=[directory_read_tool, file_read_tool, search_tool],
+    verbose=True
+)
+
+lead_sales_rep = Agent(
+    role="Lead Sales Representative",
+    goal="Analyze leads and prepare personalized outreach messages.",
+    backstory="You are a senior sales representative responsible for crafting compelling outreach messages.",
+    tools=[sentiment_analysis_tool, file_read_tool],
+    verbose=True
+)
+
+# Define Tasks
+lead_research_task = Task(
+    description="Research potential leads using the search tool and gather relevant information.",
+    agent=sales_rep,
+    expected_output="A list of potential leads with their contact information and key details."
+)
+
+outreach_preparation_task = Task(
+    description="Analyze the leads and prepare personalized outreach messages using sentiment analysis.",
+    agent=lead_sales_rep,
+    expected_output="A set of personalized outreach messages for each lead."
+)
+
+# Create and Run the Crew
+crew = Crew(
+    agents=[sales_rep, lead_sales_rep],
+    tasks=[lead_research_task, outreach_preparation_task],
+    verbose=2
+)
+
+# Execute the Crew
+result = crew.kickoff()
+print("Customer Outreach Campaign Result:")
+print(result)
+```
+
+---
+
+### Explanation of the Code:
+
+#### 1. **Tools**:
+   - **`DirectoryReadTool`**: Reads files from a specified directory (`./instructions`).
+   - **`FileReadTool`**: Reads a specific file.
+   - **`SerperDevTool`**: Performs web searches to gather information about leads.
+   - **`SentimentAnalysisTool`**: A custom tool to analyze the sentiment of text (e.g., for personalizing outreach messages).
+
+#### 2. **Agents**:
+   - **`sales_rep`**: Responsible for researching and identifying potential leads.
+   - **`lead_sales_rep`**: Responsible for analyzing leads and preparing personalized outreach messages.
+
+#### 3. **Tasks**:
+   - **`lead_research_task`**: Uses the `search_tool` to find leads and gather information.
+   - **`outreach_preparation_task`**: Uses the `sentiment_analysis_tool` to craft personalized messages.
+
+#### 4. **Crew**:
+   - The `Crew` orchestrates the agents and tasks to execute the customer outreach campaign.
+
+---
+
+### Custom Tool: `SentimentAnalysisTool`
+- The `SentimentAnalysisTool` is a custom tool built using `BaseTool`.
+- It analyzes the sentiment of a given text (positive, negative, or neutral).
+- You can replace the simple logic with a more advanced sentiment analysis library like `TextBlob` or `VADER`.
+
+---
+
+### Example Output:
+When you run the code, the agents will:
+1. Research potential leads using the `search_tool`.
+2. Analyze the leads and prepare personalized outreach messages using the `sentiment_analysis_tool`.
+
+The final output will be a set of personalized outreach messages for each lead.
+
+---
+
+### Dependencies:
+Make sure you have the following installed:
+```bash
+pip install crewai crewai-tools
+```
+
+---
+
+Let me know if you need further assistance!
