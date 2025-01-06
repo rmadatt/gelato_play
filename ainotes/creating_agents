@@ -1,0 +1,125 @@
+Prompt:
+Hi DeepSeek. Content/Topic: Creating Agents. I want to use FOSS(Free Open Source Software) I do not want to use OpenAI ChatGPT, I want to use DeepSeek so pls change these coding lines for me; from crewai import Agent, Task, Crew                                                                                               In [  ]: import os
+from utils import get_openai_api_key, pretty_print_result
+from utils import get_serper_api_key
+
+openai_api_key = get_openai_api_key()
+os.environ["OPENAI_MODEL_NAME"] = 'gpt-3.5-turbo'
+os.environ["SERPER_API_KEY"] = get_serper_api_key()
+
+DeepSeek Response:
+To adapt your code to use **DeepSeek** instead of **OpenAI ChatGPT**, you'll need to replace the OpenAI-specific configurations with DeepSeek's API. Below is the modified code:
+
+### Updated Code:
+```python
+from crewai import Agent, Task, Crew
+import os
+from utils import get_deepseek_api_key, pretty_print_result
+from utils import get_serper_api_key
+
+# Set DeepSeek API key
+deepseek_api_key = get_deepseek_api_key()
+os.environ["DEEPSEEK_API_KEY"] = deepseek_api_key
+
+# Set DeepSeek model name (if applicable)
+os.environ["DEEPSEEK_MODEL_NAME"] = 'deepseek-model-name'  # Replace with the actual DeepSeek model name
+
+# Set Serper API key for search functionality
+os.environ["SERPER_API_KEY"] = get_serper_api_key()
+```
+
+---
+
+### Explanation of Changes:
+1. **Replaced OpenAI API Key with DeepSeek API Key**:
+   - The `get_openai_api_key()` function is replaced with `get_deepseek_api_key()` to fetch the DeepSeek API key.
+   - The environment variable `OPENAI_MODEL_NAME` is replaced with `DEEPSEEK_MODEL_NAME` to specify the DeepSeek model.
+
+2. **DeepSeek Model Name**:
+   - Replace `'deepseek-model-name'` with the actual model name provided by DeepSeek (e.g., `deepseek-v3` or any other model they offer).
+
+3. **Serper API Key**:
+   - The Serper API key remains unchanged as it is used for search functionality and is independent of the LLM (Large Language Model) being used.
+
+---
+
+### Updated `utils.py`:
+Ensure your `utils.py` file has the `get_deepseek_api_key()` function. Here’s an example implementation:
+
+```python
+# utils.py
+import os
+
+def get_deepseek_api_key():
+    """Fetch DeepSeek API key from environment variables or user input."""
+    deepseek_api_key = os.getenv("DEEPSEEK_API_KEY")
+    if not deepseek_api_key:
+        deepseek_api_key = input("Enter your DeepSeek API key: ")
+    return deepseek_api_key
+
+def get_serper_api_key():
+    """Fetch Serper API key from environment variables or user input."""
+    serper_api_key = os.getenv("SERPER_API_KEY")
+    if not serper_api_key:
+        serper_api_key = input("Enter your Serper API key: ")
+    return serper_api_key
+
+def pretty_print_result(result):
+    """Pretty print the result."""
+    print("Result:")
+    print("-" * 50)
+    print(result)
+    print("-" * 50)
+```
+
+---
+
+### Example Usage with DeepSeek:
+Once the setup is complete, you can create agents and tasks using `crewai` with DeepSeek as the backend. For example:
+
+```python
+# Define agents
+researcher = Agent(
+    role="Researcher",
+    goal="Find and summarize the latest advancements in AI",
+    backstory="You are an AI researcher specializing in cutting-edge technologies.",
+    verbose=True
+)
+
+writer = Agent(
+    role="Writer",
+    goal="Write engaging and informative blog posts about AI advancements",
+    backstory="You are a technical writer with a passion for AI and technology.",
+    verbose=True
+)
+
+# Define tasks
+research_task = Task(
+    description="Find the latest advancements in AI and summarize them.",
+    agent=researcher
+)
+
+write_task = Task(
+    description="Write a blog post based on the research findings.",
+    agent=writer
+)
+
+# Create and run the crew
+crew = Crew(
+    agents=[researcher, writer],
+    tasks=[research_task, write_task],
+    verbose=2
+)
+
+result = crew.kickoff()
+pretty_print_result(result)
+```
+
+---
+
+### Notes:
+- Ensure you have the **DeepSeek API key** and the correct **model name**.
+- If DeepSeek requires additional configuration (e.g., endpoint URL), you may need to set those environment variables as well.
+- Replace `'deepseek-model-name'` with the actual model name provided by DeepSeek.
+
+Let me know if you need further assistance!
