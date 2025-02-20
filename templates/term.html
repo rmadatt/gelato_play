@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ explanation.term }} - Gelato Play</title>
+</head>
+<body>
+    <h1>{{ explanation.term }}</h1>
+    <p><strong>Definition:</strong> {{ explanation.definition }}</p>
+    <p><strong>Category:</strong> {{ explanation.category }}</p>
+    <h3>Examples</h3>
+    <ul>
+        {% for example in explanation.examples %}
+            <li>{{ example }}</li>
+        {% endfor %}
+    </ul>
+    <p><strong>Business Tip:</strong> {{ explanation.business_tip }}</p>
+    <a href="/">Back to Glossary</a>
+</body>
+</html>
