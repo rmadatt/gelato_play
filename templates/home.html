@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gelato Play - AI Glossary</title>
+</head>
+<body>
+    <h1>Welcome to Gelato Play</h1>
+    <p>An AI glossary for entrepreneurs to grow their business.</p>
+    <h2>Glossary Terms</h2>
+    <ul>
+        {% for term in terms %}
+            <li><a href="/term?term={{ term }}">{{ term }}</a></li>
+        {% endfor %}
+    </ul>
+    <form action="/term" method="post">
+        <input type="text" name="term" placeholder="Enter an AI term">
+        <button type="submit">Learn</button>
+    </form>
+</body>
+</html>
